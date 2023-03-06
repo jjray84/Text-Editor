@@ -18,13 +18,55 @@ module.exports = () => {
       path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
-      
+      new HtmlWebpackPlugin({
+        template: './src/index.html',
+        chunks: ['main'],
+        filename: 'index.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: './src/install.html',
+        chunks: ['install'],
+        filename: 'install.html',
+      }),
+      new WebpackPwaManifest({
+        name: 'My App',
+        short_name: 'My App',
+        description: 'My awesome app',
+        background_color: '#ffffff',
+        theme_color: '#2196f3',
+        icons: [
+          {
+            src: path.resolve('src/images/icon.png'),
+            sizes: [96, 128, 192, 256, 384, 512],
+            destination: path.join('icons', 'ios'),
+          },
+          {
+            src: path.resolve('src/images/icon.png'),
+            sizes: [120, 152, 167, 180],
+            destination: path.join('icons', 'ios'),
+            ios: true,
+          },
+          {
+            src: path.resolve('src/images/icon.png'),
+            sizes: [36, 48, 72, 96, 144, 192, 512],
+            destination: path.join('icons', 'android'),
+          },
+        ],
+      }),
+      new InjectManifest({
+        swSrc: './src/sw.js',
+        swDest: 'sw.js',
+      }),
     ],
 
     module: {
       rules: [
-        
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader'],
+        },
       ],
     },
   };
 };
+
